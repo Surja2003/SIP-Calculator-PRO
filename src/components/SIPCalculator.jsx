@@ -257,7 +257,7 @@ const SIPCalculator = () => {
       
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         {/* Summary Cards */}
-        <Box>
+        <Box sx={{ order: { xs: 2, md: 1 } }}>
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: 'repeat(4, 1fr)' }, gap: 2 }}>
             <Box>
               <SlideIn direction="top" delay={0.1}>
@@ -386,8 +386,8 @@ const SIPCalculator = () => {
           </Box>
         </Box>
 
-        {/* Calculator and Chart */}
-        <Box>
+  {/* Calculator and Chart */}
+  <Box sx={{ order: { xs: 1, md: 2 } }}>
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', md: '5fr 7fr', lg: '4fr 8fr' }, gap: 3 }}>
             {/* Calculator Inputs */}
             <Box>

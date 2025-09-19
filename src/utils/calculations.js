@@ -36,11 +36,12 @@ export const calculateSIP = (monthlyInvestment, annualRate, years, inflation = 0
  * @returns {Object} Object containing future value and total returns
  */
 export const calculateLumpsum = (principal, annualRate, years, inflation = 0) => {
-    // Calculate real return rate adjusted for inflation
-    const realReturnRate = (1 + annualRate/100) / (1 + inflation/100) - 1;
-    // Formula: FV = P(1 + r)^t
-    // Where: P = Principal, r = Annual Rate, t = Time in years
-    const futureValue = principal * Math.pow(1 + realReturnRate, years);
+    // Calculate real return rate adjusted for inflation (annual)
+    const realAnnualRate = (1 + annualRate/100) / (1 + inflation/100) - 1;
+    // Convert to nominal monthly rate and compound monthly over total months
+    const monthlyRate = realAnnualRate / 12;
+    const months = years * 12;
+    const futureValue = principal * Math.pow(1 + monthlyRate, months);
     const totalReturns = futureValue - principal;
     
     return {
@@ -70,18 +71,23 @@ export const formatCurrency = (num) => {
  * @returns {Object} Object containing final corpus and total withdrawals
  */
 export const calculateSWP = (principal, monthlyWithdrawal, annualRate, years, inflation = 0) => {
-    const realReturnRate = (1 + annualRate/100) / (1 + inflation/100) - 1;
-    const monthlyRate = realReturnRate / 12;
+    // Use nominal monthly rates for consistency across the app
+    const realAnnualRate = (1 + annualRate/100) / (1 + inflation/100) - 1;
+    const monthlyRate = realAnnualRate / 12;
     const months = years * 12;
     const totalWithdrawals = monthlyWithdrawal * months;
 
-    // Calculate final corpus after regular withdrawals
+    // Calculate final corpus after regular withdrawals (withdraw then grow)
     let remainingCorpus = principal;
     for (let i = 0; i < months; i++) {
-        // Add monthly returns
-        remainingCorpus = remainingCorpus * (1 + monthlyRate);
-        // Subtract monthly withdrawal
+        // Subtract monthly withdrawal first
         remainingCorpus -= monthlyWithdrawal;
+        if (remainingCorpus <= 0) {
+            remainingCorpus = 0;
+            break;
+        }
+        // Then apply monthly growth on remaining corpus
+        remainingCorpus = remainingCorpus * (1 + monthlyRate);
     }
 
     return {

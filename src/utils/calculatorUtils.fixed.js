@@ -134,14 +134,16 @@ export const calculateLumpsumFutureValueLegacy = (
   years = Number(years) || 0;
   inflationRate = Number(inflationRate) || 0;
 
-  // Calculate effective rate after inflation adjustment
-  let effectiveRate = ratePerAnnum / 100;
+  // Calculate effective annual rate after inflation adjustment
+  let effectiveAnnualRate = ratePerAnnum / 100;
   if (includeInflation) {
-    effectiveRate = ((1 + ratePerAnnum / 100) / (1 + inflationRate / 100)) - 1;
+    effectiveAnnualRate = ((1 + ratePerAnnum / 100) / (1 + inflationRate / 100)) - 1;
   }
 
-  // Calculate future value using compound interest formula
-  const futureValue = principal * Math.pow(1 + effectiveRate, years);
+  // Use monthly compounding for consistency across the app
+  const monthlyRate = effectiveAnnualRate / 12;
+  const totalMonths = years * 12;
+  const futureValue = principal * Math.pow(1 + monthlyRate, totalMonths);
   
   return Math.round(futureValue);
 };
@@ -564,14 +566,9 @@ export function calculateSWPParameters({
     // Calculate initial monthly withdrawal
     const initialMonthlyWithdrawal = (corpus * withdrawalRate) / 100;
     
-    // Calculate annual effective return rate
-    const annualEffectiveRate = returnRate / 100;
-    
-    // Calculate monthly effective return rate
-    const monthlyEffectiveRate = Math.pow(1 + annualEffectiveRate, 1/12) - 1;
-    
-    // Calculate monthly inflation rate
-    const monthlyInflationRate = Math.pow(1 + inflation / 100, 1/12) - 1;
+  // Use nominal monthly rates for consistency across the app
+  const monthlyEffectiveRate = (returnRate / 100) / 12;
+  const monthlyInflationRate = (inflation / 100) / 12;
     
     // Calculate total months
     const totalMonths = years * 12;

@@ -51,14 +51,14 @@ function NavigationTabs() {
   const location = useLocation();
   const isMobile = useMediaQuery('(max-width:768px)');
   
-  // Restrict number of visible tabs on mobile
-  const visibleTabs = isMobile ? NAV_ITEMS.slice(0, 3) : NAV_ITEMS;
+  // Show all tabs; on mobile they are scrollable
+  const visibleTabs = NAV_ITEMS;
   
   return (
     <Tabs 
       value={NAV_ITEMS.findIndex(item => item.path === location.pathname)}
       variant={isMobile ? "scrollable" : "standard"}
-      scrollButtons="auto"
+      scrollButtons={isMobile ? "auto" : false}
       sx={{
         '& .MuiTab-root': {
           minWidth: isMobile ? 'auto' : 120,

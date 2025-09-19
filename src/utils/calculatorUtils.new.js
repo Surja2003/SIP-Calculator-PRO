@@ -248,14 +248,9 @@ export function calculateSWPParametersObject({
       inflation
     );
     
-    // Calculate annual effective return rate
-    const annualEffectiveRate = returnRate / 100;
-    
-    // Calculate monthly effective return rate
-    const monthlyEffectiveRate = Math.pow(1 + annualEffectiveRate, 1/12) - 1;
-    
-    // Calculate monthly inflation rate
-    const monthlyInflationRate = Math.pow(1 + inflation / 100, 1/12) - 1;
+  // Use nominal monthly rates for consistency across the app
+  const monthlyEffectiveRate = (returnRate / 100) / 12;
+  const monthlyInflationRate = (inflation / 100) / 12;
     
     // Calculate total months
     const totalMonths = years * 12;

@@ -290,7 +290,7 @@ const SWPCalculator = () => {
       
       <Box sx={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
         {/* Summary Cards */}
-        <Box>
+        <Box sx={{ order: { xs: 2, md: 1 } }}>
           <Box sx={{ display: 'grid', gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr', md: 'repeat(4, 1fr)' }, gap: 2 }}>
             <Box>
               <SlideIn direction="top" delay={0.1}>
@@ -415,6 +415,7 @@ const SWPCalculator = () => {
       
         {/* Main Calculator Card */}
         <Card elevation={3} sx={{ 
+          order: { xs: 1, md: 2 },
           bgcolor: 'rgba(20, 30, 50, 0.95)', 
           borderRadius: 2,
           boxShadow: '0 8px 24px rgba(0,0,0,0.15)'

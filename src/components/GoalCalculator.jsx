@@ -260,9 +260,9 @@ const GoalCalculator = () => {
       </Box>
       
       <Card sx={{ borderRadius: 2, overflow: 'hidden', mb: 3 }}>
-        <Grid container>
+  <Grid container>
           {/* Input Section */}
-          <Grid xs={12} md={5} sx={{ p: 3, borderRight: { md: '1px solid rgba(255,255,255,0.1)' } }}>
+          <Grid xs={12} md={5} sx={{ p: 3, borderRight: { md: '1px solid rgba(255,255,255,0.1)' }, order: { xs: 1, md: 1 } }}>
             <Typography variant="h6" mb={3} fontWeight="500">
               Set Your Financial Goal
             </Typography>
@@ -436,7 +436,7 @@ const GoalCalculator = () => {
           </Grid>
           
           {/* Right Panel - Quick View */}
-          <Grid xs={12} md={7} sx={{ p: 3 }}>
+          <Grid xs={12} md={7} sx={{ p: 3, order: { xs: 2, md: 2 } }}>
             <Typography variant="h6" mb={3} fontWeight="500">
               Required Investment
             </Typography>
