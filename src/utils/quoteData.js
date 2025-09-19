@@ -13,9 +13,10 @@ export async function fetchYahooQuotes(symbols = []) {
     }
   } catch {}
 
-  const base = typeof window !== 'undefined' && window.location?.hostname === 'localhost'
+  const isLocal = typeof window !== 'undefined' && window.location?.hostname === 'localhost';
+  const base = isLocal
     ? '/yahoo'
-    : 'https://query1.finance.yahoo.com';
+    : (import.meta.env.VITE_API_BASE_URL ? `${import.meta.env.VITE_API_BASE_URL.replace(/\/$/, '')}/yahoo` : '/api/yahoo');
   const url = `${base}/v7/finance/quote?symbols=${encodeURIComponent(symbols.join(','))}`;
   const res = await fetch(url);
   if (!res.ok) throw new Error(`Quotes HTTP ${res.status}`);

@@ -15,7 +15,7 @@ npm run server
 Environment variables used by the server:
 - `MONGODB_URI` (required): e.g., `mongodb+srv://<user>:<pass>@cluster0.x.mongodb.net/sipcalc?retryWrites=true&w=majority`
 - `PORT` (optional): default `5175` (Render/Railway may override)
-- `ALLOWED_ORIGIN` (required in prod): your site origin, e.g., `https://<user>.github.io/<repo>`
+- `ALLOWED_ORIGIN` (required in prod):  https://surja2003.github.io/SIP-Calculator-PRO
 
 ---
 
@@ -39,6 +39,7 @@ Environment variables used by the server:
 
 4) Frontend configuration (GitHub Pages)
 - In your GitHub repo, set repository secret `VITE_API_BASE_URL` to `https://your-api.onrender.com/api`
+- Frontend will call `GET ${VITE_API_BASE_URL}/yahoo/...` for Yahoo Finance data (proxy) and `GET ${VITE_API_BASE_URL}/newsletter` and `/contacts` for forms.
 - Push to main or re-run the Pages workflow to rebuild the frontend.
 
 ---
@@ -65,6 +66,7 @@ Environment variables used by the server:
 
 5) Frontend configuration (GitHub Pages)
 - Set repository secret `VITE_API_BASE_URL` to `https://your-api.up.railway.app/api`
+- Frontend Yahoo requests route via `${VITE_API_BASE_URL}/yahoo` to bypass CORS.
 - Re-run the Pages workflow to update the frontend.
 
 ---
@@ -87,4 +89,7 @@ Environment variables used by the server:
 ## Local vs Production
 - Dev uses Vite proxy for `/api` to `http://localhost:5175`.
 - Production uses `VITE_API_BASE_URL` provided at build time by the Pages workflow.
+- Yahoo Finance requests:
+  - Dev: `/yahoo/...` → Vite proxy to `https://query1.finance.yahoo.com`
+  - Prod: `${VITE_API_BASE_URL}/yahoo/...` → Backend proxy to Yahoo (avoids CORS)
 

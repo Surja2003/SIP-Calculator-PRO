@@ -41,7 +41,11 @@ export async function fetchMarketSeries({
         // Convert to INR if symbol ends with INR using USDINR rate proxy from Yahoo as a quick heuristic
         if (/INR$/.test(symbol)) {
           try {
-            const fx = await fetch('https://query1.finance.yahoo.com/v8/finance/chart/USDINR=X?interval=1d&range=1mo');
+            const isLocal = typeof window !== 'undefined' && window.location?.hostname === 'localhost';
+            const base = isLocal
+              ? '/yahoo'
+              : (import.meta.env.VITE_API_BASE_URL ? `${import.meta.env.VITE_API_BASE_URL.replace(/\/$/, '')}/yahoo` : '/api/yahoo');
+            const fx = await fetch(`${base}/v8/finance/chart/USDINR=X?interval=1d&range=1mo`);
             const fxJson = await fx.json();
             const fxClose = fxJson?.chart?.result?.[0]?.indicators?.quote?.[0]?.close || [];
             const lastFx = fxClose.filter(Boolean).pop();
@@ -63,7 +67,11 @@ export async function fetchMarketSeries({
       } else if (source === 'yahoo') {
         // Yahoo Finance JSON for NSE/BSE tickers (e.g., TCS.NS, RELIANCE.NS, SENSEX.BO)
         const range = interval === '1d' ? '6mo' : '1mo';
-        const url = `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?interval=${interval}&range=${range}`;
+        const isLocal = typeof window !== 'undefined' && window.location?.hostname === 'localhost';
+        const base = isLocal
+          ? '/yahoo'
+          : (import.meta.env.VITE_API_BASE_URL ? `${import.meta.env.VITE_API_BASE_URL.replace(/\/$/, '')}/yahoo` : '/api/yahoo');
+        const url = `${base}/v8/finance/chart/${symbol}?interval=${interval}&range=${range}`;
         const res = await fetch(url);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const json = await res.json();

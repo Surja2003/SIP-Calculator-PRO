@@ -27,6 +27,27 @@ app.get('/', (_req, res) => res.json({ ok: true, service: 'sip-calculator-api', 
 app.use('/api/newsletter', newsletterRouter);
 app.use('/api/contacts', contactsRouter);
 
+// Lightweight proxy for Yahoo Finance to avoid browser CORS in production
+app.use('/api/yahoo', async (req, res) => {
+  try {
+    if (req.method !== 'GET') return res.status(405).json({ error: 'Method not allowed' });
+    const upstreamPath = req.originalUrl.replace(/^\/api\/yahoo/, '') || '/';
+    const url = `https://query1.finance.yahoo.com${upstreamPath}`;
+    const upstream = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'accept': 'application/json,text/plain,*/*',
+        'user-agent': 'Mozilla/5.0 (compatible; SIPCalc/1.0; +https://github.com/surja2003/SIP-Calculator-PRO)'
+      }
+    });
+    const contentType = upstream.headers.get('content-type') || 'application/json; charset=utf-8';
+    const text = await upstream.text();
+    res.status(upstream.status).set('content-type', contentType).send(text);
+  } catch (err) {
+    res.status(502).json({ error: 'Upstream error', detail: err.message });
+  }
+});
+
 mongoose
   .connect(MONGODB_URI)
   .then(() => {

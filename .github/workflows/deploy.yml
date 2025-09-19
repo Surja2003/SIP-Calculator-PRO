@@ -42,6 +42,9 @@ jobs:
       - name: Add SPA fallback (copy 404.html)
         run: cp dist/index.html dist/404.html
 
+      - name: Add .nojekyll to artifact
+        run: echo > dist/.nojekyll
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
